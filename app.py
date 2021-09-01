@@ -87,8 +87,8 @@ def main():
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
             
-    df = load_data_new()
-    x_train, x_test, y_train, y_test = split_new(df)
+    df = load_data()
+    x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest"))
