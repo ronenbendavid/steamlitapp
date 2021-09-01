@@ -20,9 +20,9 @@ def main():
     st.sidebar.markdown("Welcome to RIP AI selection!")
 
     @st.cache(persist = True)
-    def load_data_new():
+    def load_data_new(data):
         # label_names = ['0-Not Optimize','1-Optimize']
-        data = pd.read_csv("labeldataset2.csv")
+        #data = pd.read_csv("labeldataset2.csv")
         train_cols = data.columns[1:-1]
         label = data.columns[-1]
         X = data[train_cols]
@@ -68,7 +68,8 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-    X,y = load_data_new()
+    df = pd.read_csv("labeldataset2.csv")
+    X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
     # x_train, x_test, y_train, y_test = split(df)
