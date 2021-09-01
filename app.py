@@ -1,14 +1,12 @@
 import streamlit as st
 import pandas as pd
-import os 
-import csv
-import matplotlib.pyplot as plt
 import category_encoders as ce
 import numpy as np
 import scikitplot as skplt
 import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
 from xgboost import plot_tree
+from catboost import CatBoostClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -21,14 +19,14 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score,precision_score, recall_score, f1_score
 from sklearn.metrics import confusion_matrix
 import random
+
+# from metrics import Metrics
+from sklearn.model_selection import train_test_split
+
+
 seed_value = 1
 random.seed(seed_value)
 seed = seed_value
-# from metrics import Metrics
-from sklearn.model_selection import train_test_split
-from catboost import CatBoostClassifier
-from mrmr import mrmr_classif
-from interpret import set_visualize_provider
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization  based on file characterastics ")
