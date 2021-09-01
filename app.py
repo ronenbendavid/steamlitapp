@@ -4,9 +4,6 @@ import category_encoders as ce
 import numpy as np
 import scikitplot as skplt
 import matplotlib.pyplot as plt
-from xgboost import XGBClassifier
-from xgboost import plot_tree
-from catboost import CatBoostClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -14,11 +11,10 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score,precision_score, recall_score, f1_score
 from sklearn.metrics import confusion_matrix
-import random
+
 
 # from metrics import Metrics
 from sklearn.model_selection import train_test_split
