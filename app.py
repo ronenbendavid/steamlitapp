@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import category_encoders as ce
+#import category_encoders as ce
 import numpy as np
 import scikitplot as skplt
 import matplotlib.pyplot as plt
@@ -42,9 +42,9 @@ def main():
         return X,y
     @st.cache(persist = True)
     def split_new(X,y):
-        encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
-        encodeds.append((encoded_x,'LeaveOneOutEncoder'))
-        X = StandardScaler().fit_transform(encoded[0])
+        #encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
+        #encodeds.append((encoded_x,'LeaveOneOutEncoder'))
+        #X = StandardScaler().fit_transform(encoded[0])
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
         return  X_train, X_test, y_train, y_test
     @st.cache(persist = True)
