@@ -38,7 +38,7 @@ def main():
 
     @st.cache(persist = True)
     def load_data_new():
-        label_names = ['0-Not Optimize','1-Optimize']
+        # label_names = ['0-Not Optimize','1-Optimize']
         data = pd.read_csv("labeldataset2.csv")
         train_cols = data.columns[1:-1]
         label = data.columns[-1]
@@ -46,8 +46,8 @@ def main():
         X = data[train_cols]
         y = data[label]
         return X,y
-     @st.cache(persist = True)
-     def split_new(X,y):
+    @st.cache(persist = True)
+    def split_new(X,y):
         encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
         encodeds.append((encoded_x,'LeaveOneOutEncoder'))
         X = StandardScaler().fit_transform(encoded[0])
@@ -87,8 +87,8 @@ def main():
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
             
-    df = load_data()
-    x_train, x_test, y_train, y_test = split(df)
+    df = load_data_new()
+    x_train, x_test, y_train, y_test = split_new(df)
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest"))
