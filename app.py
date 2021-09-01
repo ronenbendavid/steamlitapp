@@ -9,8 +9,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
 def main():
-    st.title("Binary Classification WebApp")    
-    st.markdown("Are your mushroom edible or poisonous? 🍄")
+    st.title("My WebApp")    
+    st.markdown("First web app to simulate RIP AI ? 🍄")
 
     st.sidebar.title("Binary Classification")
     st.sidebar.markdown("Are your mushroom edible or poisonous?")
