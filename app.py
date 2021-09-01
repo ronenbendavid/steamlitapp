@@ -23,9 +23,10 @@ def main():
         data = pd.read_csv("labeldataset2.csv")
         train_cols = data.columns[1:-1]
         label = data.columns[-1]
-        print(f'Relevant features are {train_cols}')
+        st.markdow(f'Relevant features are {train_cols}')
         X = data[train_cols]
         y = data[label]
+        st.markdown("data is loaded! ")
         return X,y
     @st.cache(persist = True)
     def split_new(X,y):
