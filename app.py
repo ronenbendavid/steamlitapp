@@ -132,7 +132,7 @@ def main():
             plot_metrics(metrics)
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
-        n_estimators = st.sidebar.number_input("The number of trees in the forest", 100, 5000, step = 10, key = 'n_estimators')
+        n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
         max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
         bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
@@ -153,12 +153,13 @@ def main():
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
         max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
         max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter')
+        learning_rate = st.sidebar.slider("learning_rate", 0.1, 1.0, key = 'learning_rate')
         # bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
 
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("CatBoost Results")
-            model =  CatBoostClassifier(iterations=max_iter,learning_rate=1,depth=max_depth)
+            model =  CatBoostClassifier(iterations=max_iter,learning_rate=learning_rate,depth=max_depth)
             # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
