@@ -9,6 +9,8 @@ from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precisio
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+from catboost import CatBoostClassifier
 
 def main():
     st.title("RIP AI for Auto settings ")    
@@ -72,7 +74,7 @@ def main():
     # x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest"))
+    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
@@ -128,9 +130,45 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
-                        
+    if classifier == "XGBoost":
+        st.sidebar.subheader("Model Hyperparameters")
+        n_estimators = st.sidebar.number_input("The number of trees in the forest", 100, 5000, step = 10, key = 'n_estimators')
+        max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
+        bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+
+        if st.sidebar.button("Classify", key = 'classify'):
+            st.subheader("XGBoost Results")
+            model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40, n_estimators= n_estimators)
+            # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy.round(2))
+            st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
+            plot_metrics(metrics)
+    if classifier == "CatBoost":
+        st.sidebar.subheader("Model Hyperparameters")
+        # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
+        max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
+        max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter')
+        # bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
+        metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
+
+        if st.sidebar.button("Classify", key = 'classify'):
+            st.subheader("CatBoost Results")
+            model =  CatBoostClassifier(iterations=max_iter,learning_rate=1,depth=max_depth)
+            # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
+            model.fit(x_train, y_train)
+            accuracy = model.score(x_test, y_test)
+            y_pred = model.predict(x_test)
+            st.write("Accuracy: ", accuracy.round(2))
+            st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
+            st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
+            plot_metrics(metrics)
     if st.sidebar.checkbox("Show raw data", False):
-        st.subheader("Mushroom Data Set (Classification)")
+        st.subheader("RIP Data Set (Classification)")
         st.write(df)
     
 if __name__ == '__main__':
