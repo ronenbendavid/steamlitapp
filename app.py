@@ -32,7 +32,7 @@ def main():
         #encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
         #encodeds.append((encoded_x,'LeaveOneOutEncoder'))
         #X = StandardScaler().fit_transform(encoded[0])
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
         return  X_train, X_test, y_train, y_test
     @st.cache(persist = True)
     def load_data():
