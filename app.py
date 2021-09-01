@@ -20,9 +20,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
 
-seed_value = 1
-random.seed(seed_value)
-seed = seed_value
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization  based on file characterastics ")
