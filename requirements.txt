@@ -3,3 +3,12 @@ numpy
 pandas
 matplotlib
 scikit-learn
+category_encoders
+xgboost
+catboost
+interpret
+mrmr
+random
+scikitplot
+csv
+os
