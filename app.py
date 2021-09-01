@@ -12,8 +12,8 @@ def main():
     st.title("My WebApp")    
     st.markdown("First web app to simulate RIP AI ? 🍄")
 
-    st.sidebar.title("Binary Classification")
-    st.sidebar.markdown("Are your mushroom edible or poisonous?")
+    st.sidebar.title("XGBoost Classifier")
+    st.sidebar.markdown("Use XGBoost model to classify?")
 
     @st.cache(persist = True)
     def load_data():
@@ -52,10 +52,10 @@ def main():
     df = load_data()
     x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
-    st.sidebar.subheader("Choose Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest"))
+    st.sidebar.subheader("Choose My Classifier")
+    classifier = st.sidebar.selectbox("Classifier", ("XGoost", "CatBoost", "Random Forest"))
     
-    if classifier == "Support Vector Machine (SVM)":
+    if classifier == "XGoost":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
         kernel = st.sidebar.radio("Kernel", ("rbf", "linear"), key = 'kernel')
@@ -74,7 +74,7 @@ def main():
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
 
-    if classifier == "Logistic Regression":
+    if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
         max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter')
