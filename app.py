@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import category_encoders as ce
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -29,9 +29,8 @@ def main():
         return X,y
     @st.cache(persist = True)
     def split_new(X,y):
-        #encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
-        #encodeds.append((encoded_x,'LeaveOneOutEncoder'))
-        #X = StandardScaler().fit_transform(encoded[0])
+        encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
+        X = StandardScaler().fit_transform(encoded_x)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
         return  X_train, X_test, y_train, y_test
     @st.cache(persist = True)
