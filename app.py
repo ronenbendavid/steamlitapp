@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -8,13 +9,31 @@ from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precisio
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
+
 def main():
-    st.title("Binary Classification WebApp")    
-    st.markdown("Are your mushroom edible or poisonous? 🍄")
+    st.title("RIP AI for Auto settings ")    
+    st.markdown("Select RIP Optimization  based on file characterastics ")
 
-    st.sidebar.title("Binary Classification")
-    st.sidebar.markdown("Are your mushroom edible or poisonous?")
+    st.sidebar.title("RIP AI")
+    st.sidebar.markdown("Welcome to RIP AI selection!")
 
+    @st.cache(persist = True)
+    def load_data_new():
+        # label_names = ['0-Not Optimize','1-Optimize']
+        data = pd.read_csv("labeldataset2.csv")
+        train_cols = data.columns[1:-1]
+        label = data.columns[-1]
+        print(f'Relevant features are {train_cols}')
+        X = data[train_cols]
+        y = data[label]
+        return X,y
+    @st.cache(persist = True)
+    def split_new(X,y):
+        #encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
+        #encodeds.append((encoded_x,'LeaveOneOutEncoder'))
+        #X = StandardScaler().fit_transform(encoded[0])
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
+        return  X_train, X_test, y_train, y_test
     @st.cache(persist = True)
     def load_data():
         data = pd.read_csv('mushrooms.csv')
@@ -52,10 +71,10 @@ def main():
     df = load_data()
     x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
-    st.sidebar.subheader("Choose Classifier")
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest"))
+    st.sidebar.subheader("Choose My Classifier")
+    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest"))
     
-    if classifier == "Support Vector Machine (SVM)":
+    if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
         kernel = st.sidebar.radio("Kernel", ("rbf", "linear"), key = 'kernel')
@@ -74,7 +93,7 @@ def main():
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
 
-    if classifier == "Logistic Regression":
+    if classifier == "LogisticRegression":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
         max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter')
