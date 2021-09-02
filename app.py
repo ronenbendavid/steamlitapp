@@ -14,7 +14,8 @@ from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 from pdfrw import PdfReader
 from pdfrw.findobjs import page_per_xobj
-
+import eli5
+from eli5.sklearn import PermutationImportance
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization  based on file characterastics ")
@@ -74,7 +75,7 @@ def main():
             st.pyplot()
     def inferenceOneJob(X,y,info,num_pages,model):
             model.fit(x_train, y_train)
-            cx_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
+            cx_test = np.array([info.Creator, info.Producer, num_pages, 'L&P', 'PDF'])
             cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
             st.write(cx_test)
@@ -208,18 +209,12 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
-            #inferenceOneJob(X,y,info,num_pages,model)
-            cx_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
-            cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
-            Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
-            st.write(cx_test)
-            encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
-            ex_test = encoded_model.transform(cx_test)
-           # ex_test = StandardScaler().transform(ex_test)
-            #st.write('printing encodex X')
-            #st.write(ex_test)
-            y_predict = model.predict(ex_test)
-            st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
+            inferenceOneJob(X,y,info,num_pages,model)
+        if st.sidebar.button("Importance", key = 'importance')
+            perm = PermutationImportance(cb).fit(X_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
+            perm.fit(x_test, y_test)
+            st.write(("Importance by CatBoostClassifier")
+            eli5.show_weights(perm)
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
