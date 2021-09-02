@@ -35,7 +35,7 @@ def main():
     @st.cache(persist = True)
     def split_new(X,y):
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-        encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
+        encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
         X_train = encoded_model.transform(x_train,y_train)
         X_test = encoded_model.transform(x_test,y_test)
         return  X_train, X_test, y_train, y_test
