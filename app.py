@@ -218,8 +218,9 @@ def main():
             perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
             perm.fit(x_test, y_test)
             st.write("Importance by CatBoostClassifier")
-            st.write(perm)
-            eli5.show_weights(perm)
+            weights = eli5.show_weights(perm)
+            result = pd.read_html(weights.data)[0]
+            st.write(result)
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
