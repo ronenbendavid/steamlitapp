@@ -73,7 +73,7 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-    def inferenceOneJob(X,y,info,product,num_pages,model):
+    def inferenceOneJob(X,y,info,num_pages,product,model):
             model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, num_pages, product, 'PDF'])
             cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
@@ -107,7 +107,9 @@ def main():
     product = st.sidebar.radio("Product", ("Commercial", "L&P"), key = 'product')
     if pdffilename:
         info,num_pages = extarct_pdf_info(pdffilename)
-        st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
+        st.write(f'name:{pdffilename.name}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
+        filetype = pdffilename.type
+        st.write(f'Type of file is {pdffilename.type}')        
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     
     if classifier == "Support Vector Machine(SVM)":
