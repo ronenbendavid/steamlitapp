@@ -70,6 +70,11 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
+    def inferenceOneJob(info,num_pages,model):
+            x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
+            y_pred = model.predict(x_test)
+            return y_pred
+            
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -172,10 +177,9 @@ def main():
         learning_rate = st.sidebar.slider("learning_rate", 0.1, 1.0, key = 'learning_rate')
         # bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-
+        model =  CatBoostClassifier(iterations=max_iter,learning_rate=learning_rate,depth=max_depth)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("CatBoost Results")
-            model =  CatBoostClassifier(iterations=max_iter,learning_rate=learning_rate,depth=max_depth)
             # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
@@ -184,6 +188,9 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Predict", key = 'predict'):
+            y_predict = inferenceOneJob(info,num_pages,model)
+            st.write(f'PDF file {pdffilename} optimization: {y_predict}')
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
