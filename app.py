@@ -212,7 +212,7 @@ def main():
             inferenceOneJob(X,y,info,num_pages,model)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
-            perm = PermutationImportance(model).fit(X_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
+            perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
             perm.fit(x_test, y_test)
             st.write("Importance by CatBoostClassifier")
             eli5.show_weights(perm)
