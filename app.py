@@ -87,7 +87,7 @@ def main():
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
     pdffilename = st.file_uploader("Upload PDF file",type=['pdf'])
-    if pdffilename != ""
+    if pdffilename:
         info,num_pages = extarct_pdf_info(pdffilename)
         st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
