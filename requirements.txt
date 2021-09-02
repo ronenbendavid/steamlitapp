@@ -8,3 +8,4 @@ xgboost
 catboost
 pdfrw
 eli5
+lxml
