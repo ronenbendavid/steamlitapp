@@ -101,10 +101,10 @@ def main():
         weights = eli5.show_weights(perm)
         result = pd.read_html(weights.data)[0]
         st.write(result)
-    csfile = st.file_uploader("Upload csv file",type=['csv'])
-    if csfile:
-        df = pd.read_csv(csfile.name)
-        st.write(f'name:{csfile.name}
+    csvfile = st.file_uploader("Upload csv file",type=['csv'])
+    if csvfile:
+        df = pd.read_csv(csvfile.name)
+        st.write(f'name:{csvfile.name}')
     else:
         df = pd.read_csv("labeldataset2.csv")
     X,y = load_data_new(df)
