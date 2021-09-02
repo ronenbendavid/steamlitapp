@@ -75,8 +75,8 @@ def main():
         info = pdf.Info
     #     print(info)
         num_pages = len(pdf.pages)
-        print(num_pages)
-        print(info.Creator)
+        #print(num_pages)
+        #print(info.Creator)
         return info,num_pages
 
     df = pd.read_csv("labeldataset2.csv")
@@ -87,8 +87,9 @@ def main():
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
     pdffilename = st.file_uploader("Upload PDF file",type=['pdf'])
-    info,num_pages = extarct_pdf_info(pdffilename)
-    st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
+    if pdffilename != None
+        info,num_pages = extarct_pdf_info(pdffilename)
+        st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     
     if classifier == "Support Vector Machine(SVM)":
