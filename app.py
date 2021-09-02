@@ -72,14 +72,19 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-    def inferenceOneJob(info,num_pages,model):
-            x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
-            st.write(x_test)
-            x_test = x_test.reshape((1,5))
-            encoded_x = ce.leave_one_out.LeaveOneOutEncoder().transform(x_test,np.array([1]))
-            X_test = StandardScaler().transform(encoded_x)
-            y_pred = model.predict(x_test)
-            return y_pred
+    def inferenceOneJob(X,y,info,num_pages,model):
+            model.fit(x_train, y_train)
+            cx_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
+            cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
+            Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
+            st.write(cx_test)
+            encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
+            ex_test = encoded_model.transform(cx_test)
+            # ex_test = StandardScaler().transform(ex_test)
+            #st.write('printing encodex X')
+            #st.write(ex_test)
+            y_predict = model.predict(ex_test)
+            st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
             
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
@@ -110,10 +115,10 @@ def main():
         gamma = st.sidebar.radio("Gamma (Kernel Coefficient)", ("scale", "auto"), key = 'auto')
     
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-    
+        model = SVC(C = C, kernel = kernel, gamma = gamma)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("Support Vector Machine (SVM) Results")
-            model = SVC(C = C, kernel = kernel, gamma = gamma)
+            
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
@@ -121,24 +126,27 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
-
+        if st.sidebar.button("Predict", key = 'predict'):
+            model.fit(x_train, y_train)
+            inferenceOneJob(X,y,info,num_pages,model)
     if classifier == "LogisticRegression":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
-        max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter')
-        
+        max_iter = st.sidebar.slider("Maximum number of iterations", 100, 500, key = 'max_iter') 
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-    
+        model = LogisticRegression(C = C, max_iter = max_iter)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("Logistic Regression Results")
-            model = LogisticRegression(C = C, max_iter = max_iter)
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
             st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
-            plot_metrics(metrics)            
+            plot_metrics(metrics)  
+        if st.sidebar.button("Predict", key = 'predict'):
+            model.fit(x_train, y_train)
+            inferenceOneJob(X,y,info,num_pages,model)
 
     if classifier == "Random Forest":
         st.sidebar.subheader("Model Hyperparameters")        
@@ -146,10 +154,9 @@ def main():
         max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
         bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-    
+         model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("Random Forest Results")
-            model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
             y_pred = model.predict(x_test)
@@ -157,16 +164,18 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Predict", key = 'predict'):
+            model.fit(x_train, y_train)
+            inferenceOneJob(X,y,info,num_pages,model)
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
         max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
         bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-
+        model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40, n_estimators= n_estimators)
         if st.sidebar.button("Classify", key = 'classify'):
-            st.subheader("XGBoost Results")
-            model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40, n_estimators= n_estimators)
+            st.subheader("XGBoost Results") 
             # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
             model.fit(x_train, y_train)
             accuracy = model.score(x_test, y_test)
@@ -175,6 +184,9 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Predict", key = 'predict'):
+            model.fit(x_train, y_train)
+            inferenceOneJob(X,y,info,num_pages,model)
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -194,8 +206,9 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
-        if st.sidebar.button("Predict", key = 'predict'):
+        if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
+            #inferenceOneJob(X,y,info,num_pages,model)
             cx_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
             cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
