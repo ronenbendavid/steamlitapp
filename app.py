@@ -106,8 +106,8 @@ def main():
         df = pd.read_csv(csvfile.name)
         st.write(f'name:{csvfile.name}')
     else:
-        dummy = np.array(['creator', 'producer', 1, 'product', 'pdf'])
-        df = pd.DataFrame(dummy.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
+        dummy = np.array(['creator', 'producer', 1, 'product', 'pdf',0])
+        df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
         #df = pd.read_csv("labeldataset2.csv")
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
