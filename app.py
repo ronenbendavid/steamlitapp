@@ -18,7 +18,7 @@ def main():
 
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
-    st.file_uploader("Upload PDF file")
+    
     @st.cache(persist = True)
     def load_data_new(data):
         # label_names = ['0-Not Optimize','1-Optimize']
@@ -75,6 +75,8 @@ def main():
     # x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
+    pdffile = st.file_uploader("Upload PDF file",type=['pdf'])
+    st.write(pdffile)
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     
     if classifier == "Support Vector Machine(SVM)":
