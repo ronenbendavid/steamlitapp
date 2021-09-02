@@ -18,7 +18,7 @@ def main():
 
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
-
+    st.file_uploader("Upload PDF file")
     @st.cache(persist = True)
     def load_data_new(data):
         # label_names = ['0-Not Optimize','1-Optimize']
