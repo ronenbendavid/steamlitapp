@@ -73,9 +73,9 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-    def inferenceOneJob(X,y,info,num_pages,model):
+    def inferenceOneJob(X,y,info,product,num_pages,model):
             model.fit(x_train, y_train)
-            cx_test = np.array([info.Creator, info.Producer, num_pages, 'L&P', 'PDF'])
+            cx_test = np.array([info.Creator, info.Producer, num_pages, product, 'PDF'])
             cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
             st.write(cx_test)
@@ -104,6 +104,7 @@ def main():
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
     pdffilename = st.file_uploader("Upload PDF file",type=['pdf'])
+    product = st.sidebar.radio("Product", ("Commercial", "L&P"), key = 'product')
     if pdffilename:
         info,num_pages = extarct_pdf_info(pdffilename)
         st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
@@ -129,7 +130,7 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,model)
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "LogisticRegression":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
@@ -147,7 +148,7 @@ def main():
             plot_metrics(metrics)  
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,model)
+            inferenceOneJob(X,y,info,num_pages,product,model)
 
     if classifier == "Random Forest":
         st.sidebar.subheader("Model Hyperparameters")        
@@ -167,7 +168,7 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,model)
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
@@ -187,7 +188,7 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,model)
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -209,12 +210,13 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,model)
+            inferenceOneJob(X,y,info,num_pages,product,model)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
             perm.fit(x_test, y_test)
             st.write("Importance by CatBoostClassifier")
+            st.write(perm)
             eli5.show_weights(perm)
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
