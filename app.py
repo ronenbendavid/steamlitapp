@@ -210,7 +210,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,model)
-        if st.sidebar.button("Importance", key = 'importance')
+        if st.sidebar.button("Importance", key = 'importance'):
             perm = PermutationImportance(cb).fit(X_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
             perm.fit(x_test, y_test)
             st.write(("Importance by CatBoostClassifier")
