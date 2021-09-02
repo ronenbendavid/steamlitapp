@@ -202,10 +202,10 @@ def main():
             st.write(cx_test)
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
             ex_test = encoded_model.transform(cx_test)
-            ex_test = StandardScaler().transform(ex_test)
+            #ex_test = StandardScaler().transform(ex_test)
             st.write('printing encodex X')
             st.write(ex_test)
-            y_predict = model.predict(ex_test)
+            y_predict = 1 #model.predict(ex_test)
             st.write(f'PDF file {pdffilename} optimization: {y_predict}')
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
