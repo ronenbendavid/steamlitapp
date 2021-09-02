@@ -103,7 +103,7 @@ def main():
         st.write(result)
     csvfile = st.file_uploader("Upload csv file",type=['csv'])
     if csvfile:
-        df = pd.read_csv(csvfile.name)
+        df = pd.read_csv(csvfile)
         st.write(f'name:{csvfile.name}')
     else:
         dummy = np.array(['creator', 'producer', 1, 'product', 'pdf',0])
