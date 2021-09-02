@@ -196,7 +196,14 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            y_predict = inferenceOneJob(info,num_pages,model)
+            x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
+            st.write(x_test)
+            x_test = x_test.reshape((1,5))
+            encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
+            encoded_x = encoded_model.transform(x_test,y_test)
+            y_test = np.array([1])
+            x_test = StandardScaler().transform(encoded_x)
+            y_predict = model.predict(x_test)
             st.write(f'PDF file {pdffilename} optimization: {y_predict}')
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
