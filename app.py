@@ -34,9 +34,10 @@ def main():
         return X,y
     @st.cache(persist = True)
     def split_new(X,y):
-        encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(X,y)
-        X = StandardScaler().fit_transform(encoded_x)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+        encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
+        X_train = encoded_model.transform(x_train,y_train)
+        X_test = encoded_model.transform(x_test,y_test)
         return  X_train, X_test, y_train, y_test
     @st.cache(persist = True)
     def load_data():
@@ -74,8 +75,9 @@ def main():
     def inferenceOneJob(info,num_pages,model):
             x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
             st.write(x_test)
-            encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(x_test,np.array([1]))
-            X_test = StandardScaler().fit_transform(encoded_x)
+            x_test = x_test.reshape((1,5))
+            encoded_x = ce.leave_one_out.LeaveOneOutEncoder().transform(x_test,np.array([1]))
+            X_test = StandardScaler().transform(encoded_x)
             y_pred = model.predict(x_test)
             return y_pred
             
