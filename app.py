@@ -190,6 +190,7 @@ def main():
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
+            model.fit(x_train, y_train)
             y_predict = inferenceOneJob(info,num_pages,model)
             st.write(f'PDF file {pdffilename} optimization: {y_predict}')
     if st.sidebar.checkbox("Show raw data", False):
