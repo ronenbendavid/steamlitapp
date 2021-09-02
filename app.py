@@ -74,7 +74,7 @@ def main():
     def inferenceOneJob(info,num_pages,model):
             x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
             st.write(x_test)
-            encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(x_test,1)
+            encoded_x = ce.leave_one_out.LeaveOneOutEncoder().fit_transform(x_test,np.array([1]))
             X_test = StandardScaler().fit_transform(encoded_x)
             y_pred = model.predict(x_test)
             return y_pred
