@@ -11,6 +11,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
+from pdfrw import PdfReader
+from pdfrw.findobjs import page_per_xobj
 
 def main():
     st.title("RIP AI for Auto settings ")    
@@ -68,6 +70,15 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
+    def extarct_pdf_info(pdffilename):
+        pdf = PdfReader(pdffilename)
+        info = pdf.Info
+    #     print(info)
+        num_pages = len(pdf.pages)
+        print(num_pages)
+        print(info.Creator)
+        return info,num_pages
+
     df = pd.read_csv("labeldataset2.csv")
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
@@ -75,8 +86,9 @@ def main():
     # x_train, x_test, y_train, y_test = split(df)
     class_names = ['edible', 'poisonous']
     st.sidebar.subheader("Choose My Classifier")
-    pdffile = st.file_uploader("Upload PDF file",type=['pdf'])
-    st.write(pdffile)
+    pdffilename = st.file_uploader("Upload PDF file",type=['pdf'])
+    info,num_pages = extarct_pdf_info(pdffilename)
+    st.write(f'name:{pdffilename}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     
     if classifier == "Support Vector Machine(SVM)":
