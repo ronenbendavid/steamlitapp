@@ -202,6 +202,7 @@ def main():
             st.write(cx_test)
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(x_train,y_train)
             cx_test = encoded_model.transform(cx_test)
+            st.write(cx_test)
             y_predict = model.predict(cx_test)
             st.write(f'PDF file {pdffilename} optimization: {y_predict}')
     if st.sidebar.checkbox("Show raw data", False):
