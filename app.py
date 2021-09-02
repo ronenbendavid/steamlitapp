@@ -73,6 +73,7 @@ def main():
             st.pyplot()
     def inferenceOneJob(info,num_pages,model):
             x_test = np.array([info.Creator, info.Producer, num_pages, 'Commercial', 'PDF'])
+            st.write(x_test)
             y_pred = model.predict(x_test)
             return y_pred
             
