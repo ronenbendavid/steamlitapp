@@ -95,7 +95,12 @@ def main():
         #print(num_pages)
         #print(info.Creator)
         return info,num_pages
-
+    def importance(x_test, y_test):
+        perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
+        perm.fit(x_test, y_test)
+        weights = eli5.show_weights(perm)
+        result = pd.read_html(weights.data)[0]
+        st.write(result)
     df = pd.read_csv("labeldataset2.csv")
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
@@ -130,6 +135,10 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Importance", key = 'importance'):
+            model.fit(x_train, y_train)
+            st.write("Importance by Support Vector Machine(SVM) Classifier")
+            importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
@@ -147,11 +156,14 @@ def main():
             st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
-            plot_metrics(metrics)  
+            plot_metrics(metrics)          
+        if st.sidebar.button("Importance", key = 'importance'):
+            model.fit(x_train, y_train)
+            st.write("Importance by LogisticRegression Classifier")
+            importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-
     if classifier == "Random Forest":
         st.sidebar.subheader("Model Hyperparameters")        
         n_estimators = st.sidebar.number_input("The number of trees in the forest", 100, 5000, step = 10, key = 'n_estimators')
@@ -168,6 +180,10 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Importance", key = 'importance'):
+            model.fit(x_train, y_train)
+            st.write("Importance by Random Forest Classifier")
+            importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
@@ -188,6 +204,10 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
+        if st.sidebar.button("Importance", key = 'importance'):
+            model.fit(x_train, y_train)
+            st.write("Importance by XGBoost Classifier")
+            importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
@@ -215,12 +235,9 @@ def main():
             inferenceOneJob(X,y,info,num_pages,product,model)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
-            perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
-            perm.fit(x_test, y_test)
-            st.write("Importance by CatBoostClassifier")
-            weights = eli5.show_weights(perm)
-            result = pd.read_html(weights.data)[0]
-            st.write(result)
+            st.write("Importance by CatBoost Classifier")
+            importance(x_test, y_test)
+           
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
