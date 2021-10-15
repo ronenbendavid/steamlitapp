@@ -1,4 +1,4 @@
-apiVersion: extensions/v1
+apiVersion: api/v1
 kind: Deployment
 metadata:
     name: hpa-example
@@ -40,7 +40,7 @@ metadata:
     name: hpa-example-autoscaler
 spec:
     scaleTargetRef:
-        apiVersion: extensions/v1
+        apiVersion: api/v1
         kind: Deployment
         name: hpa-example
     minReplicas: 3
