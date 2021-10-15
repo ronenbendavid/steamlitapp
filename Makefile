@@ -13,8 +13,8 @@ cleanup:
 	minikube stop
 
 build:
-	docker build -f Dockerfile -t gcr.io/streamlit-app-141021/app:latest ..
-	docker push gcr.io/streamlit-app-141021/app:latest
+	docker build -f Dockerfile -t gcr.io/independent-bay-250811/app:latest ..
+	docker push gcr.io/independent-bay-250811/app:latest
 
 deploy: build
 	kubectl apply -f hpa.yaml
