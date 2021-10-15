@@ -2,9 +2,9 @@ FROM python:3.8
 RUN mkdir -p /usr/src/steamlitapp
 WORKDIR /usr/src/steamlitapp
 
-# Installign requirements
+# Installing requirements
 COPY ./steamlitapp/requirements.txt ./steamlitapp/requirements.txt
-RUN pip3 install --no-cache-dir -r ./steamlitapp/requirements.txt
+RUN pip3 install --no-cache-dir -r /home/ronen_bendavid/Kubernetes/steamlitapp/requirements.txt
 
 # Microservices code copy
 COPY ./steamlitapp /usr/src/steamlitapp
