@@ -12,10 +12,10 @@ spec:
         spec:
             containers:
             - name: hpa-example
-              image: gcr.io/streamlit-app-141021/app:latest
+              image: ronenben/streamlit:latest
               ports:
               - name: http-port
-                containerPort: 8081
+                containerPort: 8501
               resources:
                   requests:
                       cpu: 200m
