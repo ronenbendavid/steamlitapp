@@ -40,7 +40,7 @@ metadata:
     name: hpa-example-autoscaler
 spec:
     scaleTargetRef:
-        apiVersion: extensions/v1beta1
+        apiVersion: extensions/v1
         kind: Deployment
         name: hpa-example
     minReplicas: 3
