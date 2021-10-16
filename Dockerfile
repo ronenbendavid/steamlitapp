@@ -12,6 +12,7 @@ COPY ./steamlitapp /usr/src/steamlitapp
 WORKDIR /usr/src
 RUN chmod -R 777 /usr/src/steamlitapp
 # For local testing
-EXPOSE 8081
-ENTRYPOINT ["streamlit","run"]
-CMD ["python", "./steamlitapp/app.py"]
+EXPOSE 8501
+#ENTRYPOINT ["streamlit","run"]
+#CMD ["python", "./steamlitapp/app.py"]
+CMD streamlit run ./steamlitapp/app.py
