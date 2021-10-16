@@ -15,4 +15,4 @@ RUN chmod -R 777 /usr/src/steamlitapp
 EXPOSE 8501
 #ENTRYPOINT ["streamlit","run"]
 #CMD ["python", "./steamlitapp/app.py"]
-CMD streamlit run ./steamlitapp/app.py
+CMD streamlit run app.py
