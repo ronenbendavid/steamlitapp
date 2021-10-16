@@ -26,7 +26,7 @@ def main():
     @st.cache(persist = True)
     def load_data_new(data):
         # label_names = ['0-Not Optimize','1-Optimize']
-        #data = pd.read_csv("labeldataset2.csv")
+        #data = pd.read_csv("./steamlitapp/labeldataset2.csv")
         train_cols = data.columns[1:-1]
         label = data.columns[-1]
         X = data[train_cols]
@@ -108,7 +108,7 @@ def main():
     else:
         dummy = np.array(['creator', 'producer', 1, 'product', 'pdf',0])
         df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
-        df = pd.read_csv("labeldataset2.csv")
+        df = pd.read_csv("./steamlitapp/labeldataset2.csv")
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
