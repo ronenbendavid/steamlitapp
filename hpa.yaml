@@ -5,7 +5,8 @@ metadata:
 spec:
     replicas: 1
     selector:
-        app: hpa-example
+    matchLabels:
+        name: hpa-example
     template:
         metadata:
             name: hpa-example
