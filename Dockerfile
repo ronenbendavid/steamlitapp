@@ -12,4 +12,4 @@ COPY ./steamlitapp /usr/src/steamlitapp
 RUN chmod -R 777 /usr/src/steamlitapp
 # For local testing
 EXPOSE 8501
-CMD streamlit run app.py
+CMD streamlit run ./steamlitapp/app.py
