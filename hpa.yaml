@@ -18,7 +18,7 @@ spec:
               image: ronenben/streamlit:latest
               ports:
               - name: http-port
-                containerPort: 8501
+                containerPort: 8081
               resources:
                   requests:
                       cpu: 200m
