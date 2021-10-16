@@ -108,7 +108,7 @@ def main():
     else:
         dummy = np.array(['creator', 'producer', 1, 'product', 'pdf',0])
         df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
-        #df = pd.read_csv("labeldataset2.csv")
+        df = pd.read_csv("labeldataset2.csv")
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
