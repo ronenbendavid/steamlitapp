@@ -5,6 +5,8 @@ metadata:
 spec:
     replicas: 1
     selector:
+    matchLabels:
+      hpa-example: pod
     template:
         metadata:
             name: hpa-example
