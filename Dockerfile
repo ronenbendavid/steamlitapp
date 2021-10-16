@@ -13,4 +13,4 @@ WORKDIR /usr/src
 RUN chmod -R 777 /usr/src/steamlitapp
 # For local testing
 EXPOSE 8081
-CMD ["python", "./streamlit/app.py"]
+CMD ["python", "./steamlitapp/app.py"]
