@@ -3,10 +3,10 @@ kind: Deployment
 metadata:
     name: hpa-example
 spec:
-    replicas: 1
+    replicas: 3
     selector:
     matchLabels:
-      hpa-example: pod
+      app: hpa-example
     template:
         metadata:
             name: hpa-example
