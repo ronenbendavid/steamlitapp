@@ -4,7 +4,7 @@ WORKDIR /usr/src/steamlitapp
 
 # Installing requirements
 COPY ./steamlitapp/requirements.txt ./steamlitapp/requirements.txt
-RUN pip3 install --no-cache-dir -r ./steamlitapp/requirements.txt
+RUN pip3 install  ./steamlitapp/requirements.txt
 
 # Microservices code copy
 COPY ./steamlitapp /usr/src/steamlitapp
