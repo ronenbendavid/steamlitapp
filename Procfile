@@ -1,1 +1,1 @@
-	web: sh setup.sh && streamlit run app.py --server.maxUploadSize=1028
+	web: sh setup.sh && streamlit run app.py --server.maxUploadSize=2048
