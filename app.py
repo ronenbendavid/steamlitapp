@@ -75,7 +75,7 @@ def main():
             st.pyplot()
     def inferenceOneJob(X,y,info,num_pages,product,model):
             model.fit(x_train, y_train)
-            cx_test = np.array([info.Creator, info.Producer, num_pages, product, 'PDF'])
+            cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
             st.write(cx_test)
@@ -127,15 +127,7 @@ def main():
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    if st.sidebar.button("Save", key='save'):
-        df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
-        historysv = df.to_csv().encode('utf-8')
-        st.download_button(
-            label="Download data as CSV",
-            data=historysv,
-            file_name='ripai_history.csv',
-            mime='text/csv',
-        )
+
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
@@ -256,10 +248,18 @@ def main():
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
             importance(x_test, y_test)
-           
+
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
-    
+    if st.sidebar.button("Save", key='save'):
+        df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
+        historysv = df.to_csv().encode('utf-8')
+        st.download_button(
+            label="Download data as CSV",
+            data=historysv,
+            file_name='ripai_history.csv',
+            mime='text/csv',
+        )
 if __name__ == '__main__':
     main()
