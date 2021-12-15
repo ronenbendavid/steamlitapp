@@ -19,7 +19,7 @@ from eli5.sklearn import PermutationImportance
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization  based on file characterastics ")
-
+    history = []
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -76,17 +76,18 @@ def main():
     def inferenceOneJob(X,y,info,num_pages,product,model):
             model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, num_pages, product, 'PDF'])
-            cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
+            pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
-            st.write(cx_test)
+            st.write(pd_cx_test)
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
-            ex_test = encoded_model.transform(cx_test)
+            ex_test = encoded_model.transform(pd_cx_test)
             # ex_test = StandardScaler().transform(ex_test)
             #st.write('printing encodex X')
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            
+            line = cx_test.to_list().append(y_predict)
+            history.append(line)
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -122,10 +123,19 @@ def main():
     if pdffilename:
         info,num_pages = extarct_pdf_info(pdffilename)
         st.write(f'name:{pdffilename.name}, creator: {info.Creator} ,producer:{info.Producer},pages: {num_pages}')
+
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    
+    if st.sidebar.button("Save", key='save'):
+        df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
+        historysv = df.to_csv().encode('utf-8')
+        st.download_button(
+            label="Download data as CSV",
+            data=historysv,
+            file_name='ripai_history.csv',
+            mime='text/csv',
+        )
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
