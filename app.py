@@ -78,7 +78,7 @@ def main():
             cx_test = np.array([info.Creator, info.Producer, num_pages, product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
-            st.write(pd_cx_test)
+            st.write(cx_test)
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
             ex_test = encoded_model.transform(pd_cx_test)
             # ex_test = StandardScaler().transform(ex_test)
@@ -86,7 +86,7 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            line = cx_test.to_list().append(y_predict)
+            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict)]
             history.append(line)
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
