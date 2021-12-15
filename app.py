@@ -126,8 +126,8 @@ def main():
 
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
-    classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-
+    # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
+    classifier = st.sidebar.selectbox("Classifier", ("XGBoost", "CatBoost"))
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
@@ -198,6 +198,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
+
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
@@ -253,7 +254,7 @@ def main():
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
     if st.sidebar.button("Save", key='save'):
-        df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
+        df = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'File Type', 'Prediction'])
         historysv = df.to_csv().encode('utf-8')
         st.download_button(
             label="Download data as CSV",
