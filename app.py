@@ -75,7 +75,7 @@ def main():
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
     def inferenceOneJob(X,y,info,num_pages,product,model,history):
-            model.fit(x_train, y_train)
+            # model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
