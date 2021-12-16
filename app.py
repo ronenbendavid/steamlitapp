@@ -208,8 +208,9 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
+            history = st.session_state['history_key']
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-
+            st.session_state['history_key'] = history
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
@@ -233,6 +234,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
+            history = st.session_state['history_key']
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
             st.session_state['history_key'] = history
     if classifier == "CatBoost":
@@ -256,6 +258,7 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
+            history = st.session_state['history_key']
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
             st.session_state['history_key'] = history
         if st.sidebar.button("Importance", key = 'importance'):
@@ -268,7 +271,8 @@ def main():
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
         st.write("Writing prediction history")
-        st.write(st.session_state['history_key'])
+        history = st.session_state['history_key']
+        st.write(history)
         dfh = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
         historysv = dfh.to_csv().encode('utf-8')
 
