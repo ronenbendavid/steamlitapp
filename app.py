@@ -89,6 +89,7 @@ def main():
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict)]
             history.append(line)
+            st.write(history)
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -257,7 +258,7 @@ def main():
     if st.sidebar.button("Save records", key='save'):
         dfh = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
         historysv = dfh.to_csv().encode('utf-8')
-        st.write(dfh)
+        st.write(history)
         st.download_button(
             label="Download data as CSV",
             data=historysv,
