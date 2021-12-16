@@ -16,11 +16,11 @@ from pdfrw import PdfReader
 from pdfrw.findobjs import page_per_xobj
 import eli5
 from eli5.sklearn import PermutationImportance
-history = []
+
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization based on file characterastics.")
-
+    history = []
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -74,7 +74,7 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-    def inferenceOneJob(X,y,info,num_pages,product,model):
+    def inferenceOneJob(X,y,info,num_pages,product,model,history):
             model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
@@ -87,7 +87,7 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict.reshape((1,1)))]
+            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict.reshape((1,0)))]
             history.append(line)
             st.write(pd.DataFrame(history,columns = ['creator', 'producer', 'pages', 'product', 'type','label']))
     def extarct_pdf_info(pdffilename):
@@ -154,7 +154,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            inferenceOneJob(X,y,info,num_pages,product,model,history)
     if classifier == "LogisticRegression":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
@@ -176,7 +176,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            inferenceOneJob(X,y,info,num_pages,product,model,history)
     if classifier == "Random Forest":
         st.sidebar.subheader("Model Hyperparameters")        
         n_estimators = st.sidebar.number_input("The number of trees in the forest", 100, 5000, step = 10, key = 'n_estimators')
@@ -199,7 +199,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            inferenceOneJob(X,y,info,num_pages,product,model,history)
 
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
@@ -224,7 +224,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            inferenceOneJob(X,y,info,num_pages,product,model,history)
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -246,7 +246,7 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            inferenceOneJob(X,y,info,num_pages,product,model,history)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
