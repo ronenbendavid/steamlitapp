@@ -248,6 +248,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
+            st.write(history)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
