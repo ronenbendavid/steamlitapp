@@ -16,10 +16,11 @@ from pdfrw import PdfReader
 from pdfrw.findobjs import page_per_xobj
 import eli5
 from eli5.sklearn import PermutationImportance
+history = []
 def main():
     st.title("RIP AI for Auto settings ")    
-    st.markdown("Select RIP Optimization  based on file characterastics ")
-    history = []
+    st.markdown("Select RIP Optimization based on file characterastics.")
+
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -253,7 +254,7 @@ def main():
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
-    if st.sidebar.button("Save", key='save'):
+    if st.sidebar.button("Save records", key='save'):
         df = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'File Type', 'Prediction'])
         historysv = df.to_csv().encode('utf-8')
         st.download_button(
