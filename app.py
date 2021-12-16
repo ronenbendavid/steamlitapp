@@ -58,7 +58,8 @@ def main():
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = 0)
 
         return x_train, x_test, y_train, y_test
-    
+
+    @st.cache(persist=True)
     def plot_metrics(metrics_list):
         if 'Confusion Matrix' in metrics_list:
             st.subheader("Confusion Matrix")
@@ -74,6 +75,8 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
+
+    @st.cache(persist=True)
     def inferenceOneJob(X,y,info,num_pages,product,model,history):
             # model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
@@ -91,6 +94,8 @@ def main():
             history.append(line)
             st.write(pd.DataFrame(history,columns = ['creator', 'producer', 'pages', 'product', 'type','label']))
             return history
+
+    @st.cache(persist=True)
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -99,6 +104,8 @@ def main():
         #print(num_pages)
         #print(info.Creator)
         return info,num_pages
+
+    @st.cache(persist=True)
     def importance(x_test, y_test):
         perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
         perm.fit(x_test, y_test)
@@ -248,7 +255,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-            st.write(history)
+
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
