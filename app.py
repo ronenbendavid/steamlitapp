@@ -21,6 +21,7 @@ def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization based on file characterastics.")
     history = []
+    st.session_state['history_key'] = history
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -233,6 +234,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
+            st.session_state['history_key'] = history
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -255,7 +257,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-
+            st.session_state['history_key'] = history
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
@@ -266,7 +268,7 @@ def main():
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
         st.write("Writing prediction history")
-        st.write(history)
+        st.write(st.session_state['history_key'])
         dfh = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
         historysv = dfh.to_csv().encode('utf-8')
 
