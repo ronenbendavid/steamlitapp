@@ -255,8 +255,9 @@ def main():
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
-        df = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'File Type', 'Prediction'])
-        historysv = df.to_csv().encode('utf-8')
+        dfh = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
+        historysv = dfh.to_csv().encode('utf-8')
+        st.write(dfh)
         st.download_button(
             label="Download data as CSV",
             data=historysv,
