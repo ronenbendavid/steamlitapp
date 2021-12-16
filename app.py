@@ -76,7 +76,7 @@ def main():
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
 
-    @st.cache(persist=True)
+
     def inferenceOneJob(X,y,info,num_pages,product,model,history):
             # model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
@@ -95,7 +95,7 @@ def main():
             st.write(pd.DataFrame(history,columns = ['creator', 'producer', 'pages', 'product', 'type','label']))
             return history
 
-    @st.cache(persist=True)
+
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -105,7 +105,7 @@ def main():
         #print(info.Creator)
         return info,num_pages
 
-    @st.cache(persist=True)
+
     def importance(x_test, y_test):
         perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
         perm.fit(x_test, y_test)
