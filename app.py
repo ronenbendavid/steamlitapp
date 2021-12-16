@@ -87,7 +87,7 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict.reshape((1,0)))]
+            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict.reshape((1)))]
             history.append(line)
             st.write(pd.DataFrame(history,columns = ['creator', 'producer', 'pages', 'product', 'type','label']))
     def extarct_pdf_info(pdffilename):
