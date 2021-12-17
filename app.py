@@ -275,9 +275,9 @@ def main():
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
         st.write("Writing prediction history")
-        history = st.session_state['history_key']
-        st.write(history)
-        dfh = pd.DataFrame(history,columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
+        st.write(st.session_state['history_key'])
+
+        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
         historysv = dfh.to_csv().encode('utf-8')
 
         st.download_button(
