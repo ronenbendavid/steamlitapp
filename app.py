@@ -21,7 +21,7 @@ def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization based on file characterastics.")
     history = []
-    st.session_state['history_key'] = history
+    st.session_state['history_key'] = 'history'
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
