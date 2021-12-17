@@ -263,8 +263,8 @@ def main():
             history = st.session_state['history_key']
             st.write(history)
             history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-            st.write(history)
             st.session_state['history_key'] = history
+            st.write(st.session_state['history_key'])
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
