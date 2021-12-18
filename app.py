@@ -80,7 +80,7 @@ def main():
             st.pyplot()
 
 
-    def inferenceOneJob(X,y,info,num_pages,product,model,history):
+    def inferenceOneJob(X,y,info,num_pages,product,model):
             # model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
@@ -94,9 +94,7 @@ def main():
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',1]
-            history.append(line)
-            st.write(pd.DataFrame(history,columns = ['creator', 'producer', 'pages', 'product', 'type','label']))
-            return history
+            st.session_state['history_key'].append(line)
 
 
     def extarct_pdf_info(pdffilename):
@@ -165,7 +163,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            history = inferenceOneJob(X,y,info,num_pages,product,model,history)
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "LogisticRegression":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C_LR')
@@ -187,7 +185,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            history = inferenceOneJob(X,y,info,num_pages,product,model,history)
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "Random Forest":
         st.sidebar.subheader("Model Hyperparameters")        
         n_estimators = st.sidebar.number_input("The number of trees in the forest", 100, 5000, step = 10, key = 'n_estimators')
@@ -210,9 +208,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            history = st.session_state['history_key']
-            history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-            st.session_state['history_key'] = history
+            inferenceOneJob(X,y,info,num_pages,product,model)
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
@@ -236,9 +232,8 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            history = st.session_state['history_key']
-            history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-            st.session_state['history_key'] = history
+            inferenceOneJob(X,y,info,num_pages,product,model)
+
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -260,11 +255,8 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
-            history = st.session_state['history_key']
-            st.write(history)
-            history = inferenceOneJob(X,y,info,num_pages,product,model,history)
-            st.session_state['history_key'] = history
             st.write(st.session_state['history_key'])
+            inferenceOneJob(X,y,info,num_pages,product,model)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
@@ -276,10 +268,9 @@ def main():
     if st.sidebar.button("Save records", key='save'):
         st.write("Writing prediction history")
         st.write(st.session_state['history_key'])
-
-        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','File Type', 'Prediction'])
+        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label'])
+        st.write(dfh)
         historysv = dfh.to_csv().encode('utf-8')
-
         st.download_button(
             label="Download data as CSV",
             data=historysv,
