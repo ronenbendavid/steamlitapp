@@ -20,10 +20,10 @@ from eli5.sklearn import PermutationImportance
 def main():
     st.title("RIP AI for Auto settings ")    
     st.markdown("Select RIP Optimization based on file characterastics.")
-    history = []
     a = ['info.Creator', 'info.Producer', str(1), 'product', 'PDF',1]
-    history.append(a)
-    st.session_state['history_key'] = history
+    if 'history_key' not in st.session_state:
+        st.session_state['history_key'] = []
+    st.session_state['history_key'].append(a)
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
