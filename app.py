@@ -92,7 +92,14 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',1]
+            check = st.sidebar.checkbox("Check if Prediction is Correct", False)
+            if check:
+                st.write(":smile:" * 3)
+                label = y_predict
+            else:
+                st.write(":unsmile:" * 3)
+                label = lambda x: 1 if (y_predict == 0) else 0
+            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
             st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
 
@@ -259,10 +266,13 @@ def main():
             inferenceOneJob(X,y,info,num_pages,product,model)
             st.write('After return from Inference Job with CatBoost')
             st.write(st.session_state['history_key'])
+
+
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
             importance(x_test, y_test)
+
 
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
@@ -270,7 +280,7 @@ def main():
     if st.sidebar.button("Save records", key='save'):
         st.write("Writing prediction history")
         st.write(st.session_state['history_key'])
-        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label'])
+        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
         st.write(dfh)
         historysv = dfh.to_csv().encode('utf-8')
         st.download_button(
