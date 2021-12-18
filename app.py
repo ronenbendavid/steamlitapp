@@ -92,17 +92,10 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            check = st.sidebar.checkbox("Check if Prediction is Correct", False)
-            if check:
-                st.write(":smile:" * 3)
-                label = y_predict
-            else:
-                if (y_predict == 0):
-                    label = 1
-                else:
-                    label = 0
+            label = st.session_state['label']
+            y_predict = y_predict[0]
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
-            st.write(f"Adding line {line} to {st.session_state['history_key']}")
+            # st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
 
 
@@ -132,6 +125,12 @@ def main():
         df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
         df = pd.read_csv("./labeldataset2.csv")
         print(df.head(10));
+    check = st.sidebar.checkbox("Check if you know file need optimization", False)
+    if check:
+        st.write(":smile:" * 3)
+        st.session_state['label'] = 1
+    else:
+        st.session_state['label'] = 0
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
