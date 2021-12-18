@@ -97,8 +97,10 @@ def main():
                 st.write(":smile:" * 3)
                 label = y_predict
             else:
-                st.write(":unsmile:" * 3)
-                label = lambda x: 1 if (y_predict == 0) else 0
+                if (y_predict == 0):
+                    label = 1
+                else:
+                    label = 0
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
             st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
