@@ -125,6 +125,7 @@ def main():
         df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
         df = pd.read_csv("./labeldataset2.csv")
         print(df.head(10));
+
     check = st.sidebar.checkbox("Check if you know file need optimization", False)
     if check:
         st.write(":smile:" * 3)
@@ -279,14 +280,20 @@ def main():
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
-        st.write("Writing prediction history")
-        st.write(st.session_state['history_key'])
+        # st.write("Writing prediction history")
+        # st.write(st.session_state['history_key'])
         dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
         st.write(dfh)
-        historysv = dfh.to_csv().encode('utf-8')
+        # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
+        # if historycsv:
+        #     dfho = pd.read_csv(historycsv)
+        # else:
+        #     dfho = pd.read_csv("./ripai_history.csv")
+
+        historycsv = dfh.to_csv().encode('utf-8')
         st.download_button(
             label="Download data as CSV",
-            data=historysv,
+            data=historycsv,
             file_name='ripai_history.csv',
             mime='text/csv',
         )
