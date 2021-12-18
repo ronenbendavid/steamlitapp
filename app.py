@@ -147,7 +147,7 @@ def main():
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
     # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    classifier = st.sidebar.selectbox("Classifier", ("XGBoost", "CatBoost"))
+    classifier = st.sidebar.selectbox("Classifier", ("CatBoost","XGBoost"))
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
@@ -263,7 +263,7 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
-        if st.sidebar.button("Predict", key = 'predict'):   
+        if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
             st.write('After return from Inference Job with CatBoost')
