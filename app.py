@@ -283,7 +283,7 @@ def main():
         # st.write("Writing prediction history")
         # st.write(st.session_state['history_key'])
         dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
-        st.write(f"Saving data table. Collected {dfh.rows} elements.")
+        st.write(f"Saving data table. Collected {dfh.count} elements.")
         # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
         # if historycsv:
         #     dfho = pd.read_csv(historycsv)
