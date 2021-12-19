@@ -44,8 +44,8 @@ spec:
     selector:
         app: hpa-example
     ports:
-    - port: 31001
-      nodePort: 31001
+    - port: 80
+      nodePort: 8051
       targetPort: http-port
       protocol: TCP
 ---
