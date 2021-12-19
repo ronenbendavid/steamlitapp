@@ -84,7 +84,7 @@ def main():
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
-            st.write(cx_test)
+
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
             ex_test = encoded_model.transform(pd_cx_test)
             # ex_test = StandardScaler().transform(ex_test)
@@ -95,6 +95,7 @@ def main():
             label = st.session_state['label']
             y_predict = y_predict[0]
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
+            st.write(pd.DataFrame(line,columns = ['creator', 'producer', 'pages', 'product', 'type','label','prediction']))
             # st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
 
@@ -128,7 +129,7 @@ def main():
 
     check = st.sidebar.checkbox("Check if you know file need optimization", False)
     if check:
-        st.write(":smile:" * 3)
+        # st.write(":smile:" * 3)
         st.session_state['label'] = 1
     else:
         st.session_state['label'] = 0
@@ -282,7 +283,7 @@ def main():
         # st.write("Writing prediction history")
         # st.write(st.session_state['history_key'])
         dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
-        st.write(dfh)
+        st.write(f"Saving data table:\n {dfh}")
         # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
         # if historycsv:
         #     dfho = pd.read_csv(historycsv)
