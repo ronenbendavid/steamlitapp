@@ -95,7 +95,7 @@ def main():
             label = st.session_state['label']
             y_predict = y_predict[0]
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
-            st.write(pd.DataFrame(np.array(line).reshape((1,7),columns = ['creator', 'producer', 'pages', 'product', 'type','label','prediction']))
+            st.write(pd.DataFrame(np.array(line).reshape((1,7)),columns = ['creator', 'producer', 'pages', 'product', 'type','label','prediction']))
             # st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
 
