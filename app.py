@@ -242,8 +242,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-            st.write('After return from Inference Job with XGboost')
-            st.write(st.session_state['history_key'])
+
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -266,8 +265,8 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-            st.write('After return from Inference Job with CatBoost')
-            st.write(st.session_state['history_key'])
+            # st.write('After return from Inference Job with CatBoost')
+            # st.write(st.session_state['history_key'])
 
 
         if st.sidebar.button("Importance", key = 'importance'):
