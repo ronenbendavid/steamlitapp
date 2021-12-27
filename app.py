@@ -149,7 +149,7 @@ def main():
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
     # x_train, x_test, y_train, y_test = split(df)
-    class_names = ['edible', 'poisonous']
+    class_names = ['Not optimized', 'Optimize']
     st.sidebar.subheader("Choose My Classifier")
     pdffilename = st.file_uploader("Upload PDF file",type=['pdf'])
     product = st.sidebar.radio("Product", ("Commercial", "L&P"), key = 'product')
