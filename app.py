@@ -239,6 +239,8 @@ def main():
         model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40, n_estimators= n_estimators)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("XGBoost Results") 
+            st.write(f"Do nothing")
+            '''
             # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
             try:
                 model.fit(x_train, y_train)
@@ -249,7 +251,7 @@ def main():
             st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
-            plot_metrics(metrics)
+            plot_metrics(metrics)'''
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by XGBoost Classifier")
