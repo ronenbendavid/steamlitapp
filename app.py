@@ -26,7 +26,7 @@ def main():
         st.session_state['history_key'] = []
     if 'csv_key' not in st.session_state:
         st.session_state['csv_key'] = 'ripai_history.csv'
-     if 'columns_key' not in st.session_state:
+    if 'columns_key' not in st.session_state:
         st.session_state['columns_key'] = ['creator', 'producer', 'pages', 'product', 'type','label','predict']
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
