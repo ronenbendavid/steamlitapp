@@ -325,34 +325,13 @@ def main():
             #else:
             #    objecttodwl = json.dumps(df)
             objecttodwl = df.to_csv(index=False)
-            '''try:
-                # some strings <-> bytes conversions necessary here
-                b64 = base64.b64encode(objecttodwl.encode()).decode()
-
-            except AttributeError as e:
-                b64 = base64.b64encode(objecttodwl).decode()
-            dl_link = f"""
-                        <html>
-                        <head>
-                        <title>Start Auto Download file</title>
-                        <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-                        <script>
-                        $('<a href="data:text/csv;base64,{objecttodwl}" download="{st.session_state['csv_key']}">')[0].click()
-                        </script>
-                        </head>
-                        </html>
-                        """
-            '''
             st.download_button(
                 label="Download data as CSV",
                 data=objecttodwl,
                 file_name= st.session_state['csv_key'],
                 mime='text/csv',
             )
-            #st.form_submit_button("Download dataframe", on_click=components.html(dl_link,height=0,))
-            
-
-            
+              
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
