@@ -304,10 +304,13 @@ def main():
                         </head>
                         </html>
                         """
-            with st.form("my_form", clear_on_submit=False):
-                st.form_submit_button("Download dataframe", on_click=components.html(dl_link,
-                                height=0,
-                ))
+            st.download_button(
+                label="Download data as CSV",
+                data=b64,
+                file_name= st.session_state['csv_key'],
+                mime='text/csv',
+            )
+            #st.form_submit_button("Download dataframe", on_click=components.html(dl_link,height=0,))
             
 
             
