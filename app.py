@@ -160,7 +160,7 @@ def main():
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
     # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    classifier = st.sidebar.selectbox("Classifier", ("CatBoost","XGBoost"))
+    classifier = st.sidebar.selectbox("Classifier", ("CatBoost"))
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
@@ -259,7 +259,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            predict_succesfuly = inferenceOneJob(X.values,y,info,num_pages,product,model)
+            predict_succesfuly = inferenceOneJob(X,y,info,num_pages,product,model)
             if predict_succesfuly:
                 st.write(":smile:" * 3)
             else:
