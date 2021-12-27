@@ -103,6 +103,10 @@ def main():
             st.write(pd.DataFrame(np.array(line).reshape((1,7)),columns = st.session_state['columns_key']))
             # st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
+            if (label == y_predict):
+                return True;
+            else:
+                return False
 
 
     def extarct_pdf_info(pdffilename):
@@ -134,7 +138,6 @@ def main():
 
     check = st.sidebar.checkbox("Check if you know file need optimization", False)
     if check:
-        st.write(":smile:" * 3)
         st.session_state['label'] = 1
     else:
         st.session_state['label'] = 0
@@ -270,11 +273,15 @@ def main():
             plot_metrics(metrics)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            predict_succesfuly = inferenceOneJob(X,y,info,num_pages,product,model)
+            if predict_succesfuly:
+                st.write(":smile:" * 3)
             df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
             if os.path.exists(st.session_state['csv_key']):
+                st.write(f"Writing data to a new file: {st.session_state['csv_key']}")
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
             else:
+                st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
