@@ -285,6 +285,7 @@ def main():
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
             else:
                 st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
+                df.to_csv(st.session_state['csv_key'], header=False)
             #df.to_csv(st.session_state['csv_key'], mode='a', header=False)
             dl_link = f"""
                         <html>
@@ -297,17 +298,13 @@ def main():
                         </head>
                         </html>
                         """
-            components.html(dl_link,height=0)
-    )
+            components.html(dl_link,
+                            height=0,
+            )
+    
 
 
-def download_df():
-    df = pd.DataFrame(st.session_state.col_values, columns=[st.session_state.col_name])
-    components.html(
-        download_button(df, st.session_state.filename),
-        height=0,
-    )
-                df.to_csv(st.session_state['csv_key'], mode='a', header=False)
+            
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
