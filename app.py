@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import category_encoders as ce
 import os
+import base64
+import json
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
