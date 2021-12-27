@@ -69,7 +69,7 @@ def main():
 
         return x_train, x_test, y_train, y_test
 
-    @st.cache(persist=True)
+    @st.cache(suppress_st_warning=True)
     def plot_metrics(metrics_list):
         if 'Confusion Matrix' in metrics_list:
             st.subheader("Confusion Matrix")
@@ -249,7 +249,7 @@ def main():
             st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
-            #plot_metrics(metrics)
+            plot_metrics(metrics)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by XGBoost Classifier")
