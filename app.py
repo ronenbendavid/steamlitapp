@@ -160,7 +160,7 @@ def main():
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
     # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    classifier = st.sidebar.selectbox("Classifier", ("CatBoost"))
+    classifier = st.sidebar.selectbox("Classifier", ("CatBoost","Random Forest"))
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
