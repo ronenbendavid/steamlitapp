@@ -245,10 +245,10 @@ def main():
             except AttributeError as e:
                  st.write(f"caught an exception {e}: ")
             accuracy = model.score(x_test, y_test)
-            y_pred = y_train #model.predict(x_test)
+            y_pred = model.predict(x_test)
             #st.write("Accuracy: ", accuracy.round(2))
-            st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
-            st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
+            #st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
+            #st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
