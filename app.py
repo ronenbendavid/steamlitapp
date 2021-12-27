@@ -276,6 +276,8 @@ def main():
             predict_succesfuly = inferenceOneJob(X,y,info,num_pages,product,model)
             if predict_succesfuly:
                 st.write(":smile:" * 3)
+            else:
+                st.write(":sad:" * 3)
             df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
             if os.path.exists(st.session_state['csv_key']):
                 st.write(f"Writing data to a new file: {st.session_state['csv_key']}")
