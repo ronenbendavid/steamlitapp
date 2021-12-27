@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import category_encoders as ce
@@ -277,13 +278,35 @@ def main():
             if predict_succesfuly:
                 st.write(":smile:" * 3)
             else:
-                st.write(":sad:" * 3)
+                st.write(":cake:" * 3)
             df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
             if os.path.exists(st.session_state['csv_key']):
                 st.write(f"Writing data to a new file: {st.session_state['csv_key']}")
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
             else:
                 st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
+            #df.to_csv(st.session_state['csv_key'], mode='a', header=False)
+            dl_link = f"""
+                        <html>
+                        <head>
+                        <title>Start Auto Download file</title>
+                        <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+                        <script>
+                        $('<a href="data:text/csv;base64,{b64}" download="{st.session_state['csv_key']}">')[0].click()
+                        </script>
+                        </head>
+                        </html>
+                        """
+            components.html(dl_link,height=0)
+    )
+
+
+def download_df():
+    df = pd.DataFrame(st.session_state.col_values, columns=[st.session_state.col_name])
+    components.html(
+        download_button(df, st.session_state.filename),
+        height=0,
+    )
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
