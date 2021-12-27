@@ -287,6 +287,16 @@ def main():
                 st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
                 df.to_csv(st.session_state['csv_key'], header=False)
             #df.to_csv(st.session_state['csv_key'], mode='a', header=False)
+            if isinstance(df, pd.DataFrame):
+                df = df.to_csv(index=False)
+            else:
+                df = json.dumps(df)
+            try:
+                # some strings <-> bytes conversions necessary here
+                b64 = base64.b64encode(df.encode()).decode()
+
+            except AttributeError as e:
+                b64 = base64.b64encode(df).decode()
             dl_link = f"""
                         <html>
                         <head>
