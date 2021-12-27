@@ -239,7 +239,7 @@ def main():
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
         model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', \
                                 max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40,\
-                                n_estimators= n_estimators,enable_categorical = True)
+                                n_estimators= n_estimators)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("XGBoost Results")       
             try:
