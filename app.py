@@ -241,11 +241,12 @@ def main():
             st.subheader("XGBoost Results")       
             try:
                 model.fit(x_train, y_train)
-                accuracy =  1    #model.score(x_test, y_test)
-                y_pred = y_train #model.predict(x_test)
+                
             except AttributeError as e:
                  st.write(f"caught an exception {e}: ")
-            st.write("Accuracy: ", accuracy.round(2))
+            accuracy = model.score(x_test, y_test)
+            y_pred = y_train #model.predict(x_test)
+            #st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
