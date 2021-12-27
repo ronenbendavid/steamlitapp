@@ -16,13 +16,10 @@ from pdfrw import PdfReader
 from pdfrw.findobjs import page_per_xobj
 import eli5
 from eli5.sklearn import PermutationImportance
-
 def main():
     st.title("RIP AI for Auto settings ")    
-    st.markdown("Select RIP Optimization based on file characterastics.")
-    #a = ['info.Creator', 'info.Producer', str(1), 'product', 'PDF',1]
-    if 'history_key' not in st.session_state:
-        st.session_state['history_key'] = []
+    st.markdown("Select RIP Optimization  based on file characterastics ")
+    history = []
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -60,8 +57,7 @@ def main():
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = 0)
 
         return x_train, x_test, y_train, y_test
-
-    @st.cache(persist=True)
+    
     def plot_metrics(metrics_list):
         if 'Confusion Matrix' in metrics_list:
             st.subheader("Confusion Matrix")
@@ -77,14 +73,12 @@ def main():
             st.subheader("Precision-Recall Curve")
             plot_precision_recall_curve(model, x_test, y_test)
             st.pyplot()
-
-
     def inferenceOneJob(X,y,info,num_pages,product,model):
-            # model.fit(x_train, y_train)
+            model.fit(x_train, y_train)
             cx_test = np.array([info.Creator, info.Producer, str(num_pages), product, 'PDF'])
             pd_cx_test = pd.DataFrame(cx_test.reshape((1,5)),columns = ['creator', 'producer', 'pages', 'product', 'type'])
             Y_test = pd.DataFrame(np.array([1]),columns = ['label'])
-
+            st.write(cx_test)
             encoded_model = ce.leave_one_out.LeaveOneOutEncoder().fit(X,y)
             ex_test = encoded_model.transform(pd_cx_test)
             # ex_test = StandardScaler().transform(ex_test)
@@ -92,14 +86,8 @@ def main():
             #st.write(ex_test)
             y_predict = model.predict(ex_test)
             st.write(f'Optimization Results for file: {pdffilename.name} Type {pdffilename.type} Size {pdffilename.size} is: {y_predict}')
-            label = st.session_state['label']
-            y_predict = y_predict[0]
-            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
-            st.write(pd.DataFrame(np.array(line).reshape((1,7)),columns = ['creator', 'producer', 'pages', 'product', 'type','label','prediction']))
-            # st.write(f"Adding line {line} to {st.session_state['history_key']}")
-            st.session_state['history_key'].append(line)
-
-
+            line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',str(y_predict)]
+            history.append(line)
     def extarct_pdf_info(pdffilename):
         pdf = PdfReader(pdffilename)
         info = pdf.Info
@@ -108,8 +96,6 @@ def main():
         #print(num_pages)
         #print(info.Creator)
         return info,num_pages
-
-
     def importance(x_test, y_test):
         perm = PermutationImportance(model).fit(x_test, y_test, groups=['creator', 'producer', 'pages', 'product', 'type'])
         perm.fit(x_test, y_test)
@@ -126,13 +112,6 @@ def main():
         df = pd.DataFrame(dummy.reshape((1,6)),columns = ['creator', 'producer', 'pages', 'product', 'type','label'])
         df = pd.read_csv("./labeldataset2.csv")
         print(df.head(10));
-
-    check = st.sidebar.checkbox("Check if you know file need optimization", False)
-    if check:
-        # st.write(":smile:" * 3)
-        st.session_state['label'] = 1
-    else:
-        st.session_state['label'] = 0
     X,y = load_data_new(df)
     x_train, x_test, y_train, y_test = split_new(X,y)
     # df = load_data()
@@ -147,8 +126,9 @@ def main():
 
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
+        st.image(pdffilename)
     # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
-    classifier = st.sidebar.selectbox("Classifier", ("CatBoost","XGBoost"))
+    classifier = st.sidebar.selectbox("Classifier", ("XGBoost", "CatBoost"))
     if classifier == "Support Vector Machine(SVM)":
         st.sidebar.subheader("Model Hyperparameters")
         C = st.sidebar.number_input("C (Regularization parameter)", 0.01, 10.0, step = 0.01, key = 'C')
@@ -219,6 +199,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
+
     if classifier == "XGBoost":
         st.sidebar.subheader("Model Hyperparameters")
         n_estimators = st.sidebar.number_input("The number of trees in XGBoost", 100, 5000, step = 10, key = 'n_estimators')
@@ -243,7 +224,6 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
@@ -263,37 +243,25 @@ def main():
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
             plot_metrics(metrics)
-        if st.sidebar.button("Predict", key = 'predict'):
+        if st.sidebar.button("Predict", key = 'predict'):   
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-            # st.write('After return from Inference Job with CatBoost')
-            # st.write(st.session_state['history_key'])
-
-
+            df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
+            historysv = df.to_csv().encode('utf-8')
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
             importance(x_test, y_test)
 
-
     if st.sidebar.checkbox("Show raw data", False):
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
-    if st.sidebar.button("Save records", key='save'):
-        # st.write("Writing prediction history")
-        # st.write(st.session_state['history_key'])
-        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
-        st.write(f"Saving data table. During this session we collected {dfh.shape[0]} elements.")
-        # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
-        # if historycsv:
-        #     dfho = pd.read_csv(historycsv)
-        # else:
-        #     dfho = pd.read_csv("./ripai_history.csv")
-
-        historycsv = dfh.to_csv().encode('utf-8')
+    if st.sidebar.button("Save", key='save'):
+        df = pd.DataFrame(history,columns=['name', 'creator', 'producer', 'pages', 'value'])
+        historysv = df.to_csv().encode('utf-8')
         st.download_button(
             label="Download data as CSV",
-            data=historycsv,
+            data=historysv,
             file_name='ripai_history.csv',
             mime='text/csv',
         )
