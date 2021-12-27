@@ -71,6 +71,7 @@ def main():
 
     @st.cache(suppress_st_warning=True)
     def plot_metrics(metrics_list):
+        st.set_option('deprecation.showPyplotGlobalUse', False)
         if 'Confusion Matrix' in metrics_list:
             st.subheader("Confusion Matrix")
             plot_confusion_matrix(model, x_test, y_test, display_labels = class_names)
