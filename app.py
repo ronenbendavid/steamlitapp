@@ -240,9 +240,12 @@ def main():
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("XGBoost Results") 
             # model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth, bootstrap = bootstrap, n_jobs = -1)
-            model.fit(x_train, y_train)
-            accuracy = model.score(x_test, y_test)
-            y_pred = model.predict(x_test)
+            try:
+                model.fit(x_train, y_train)
+                accuracy = model.score(x_test, y_test)
+                y_pred = model.predict(x_test)
+            except AttributeError as e:
+                 st.write(f"caught an exception {e}: ")
             st.write("Accuracy: ", accuracy.round(2))
             st.write("Precision: ", precision_score(y_test, y_pred, labels = class_names).round(2))
             st.write("Recall: ", recall_score(y_test, y_pred, labels = class_names).round(2))
