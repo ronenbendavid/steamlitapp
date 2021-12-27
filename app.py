@@ -278,8 +278,8 @@ def main():
         st.subheader("RIP Data Set (Classification)")
         st.write(df)
     if st.sidebar.button("Save records", key='save'):
-        # st.write("Writing prediction history")
-        st.write(st.session_state['history_key'])
+        st.write("Writing prediction history, total of {len(st.session_state['history_key'])} items")
+        # st.write(st.session_state['history_key'])
         dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
         st.write(f"Saving data table. During this session we collected {dfh.shape[0]} elements.")
         # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
