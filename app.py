@@ -325,7 +325,7 @@ def main():
             #else:
             #    objecttodwl = json.dumps(df)
             objecttodwl = df.to_csv(index=False)
-            try:
+            '''try:
                 # some strings <-> bytes conversions necessary here
                 b64 = base64.b64encode(objecttodwl.encode()).decode()
 
@@ -337,14 +337,15 @@ def main():
                         <title>Start Auto Download file</title>
                         <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
                         <script>
-                        $('<a href="data:text/csv;base64,{b64}" download="{st.session_state['csv_key']}">')[0].click()
+                        $('<a href="data:text/csv;base64,{objecttodwl}" download="{st.session_state['csv_key']}">')[0].click()
                         </script>
                         </head>
                         </html>
                         """
+            '''
             st.download_button(
                 label="Download data as CSV",
-                data=b64,
+                data=objecttodwl,
                 file_name= st.session_state['csv_key'],
                 mime='text/csv',
             )
