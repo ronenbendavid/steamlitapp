@@ -126,7 +126,6 @@ def main():
 
         filetype = pdffilename.type
         st.write(f'Type of file is {pdffilename.type}')        
-        st.image(pdffilename)
     # classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine(SVM)", "LogisticRegression", "Random Forest","XGBoost","CatBoost"))
     classifier = st.sidebar.selectbox("Classifier", ("XGBoost", "CatBoost"))
     if classifier == "Support Vector Machine(SVM)":
