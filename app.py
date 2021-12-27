@@ -304,11 +304,11 @@ def main():
                         </head>
                         </html>
                         """
-            components.html(dl_link,
-                            height=0,
-            )
-    
-
+            with st.form("my_form", clear_on_submit=False):
+                st.form_submit_button("Download dataframe", on_click=components.html(dl_link,
+                                height=0,
+                ))
+            
 
             
         if st.sidebar.button("Importance", key = 'importance'):
