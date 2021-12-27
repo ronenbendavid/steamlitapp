@@ -267,7 +267,7 @@ def main():
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
             df = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
-            historysv = df.to_csv('./ripai_history.csv', mode='a', header=False)
+            historysv = df.to_csv('C:/Temp/ripai_history.csv', mode='a', header=False)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
