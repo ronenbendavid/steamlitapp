@@ -25,7 +25,9 @@ def main():
     if 'history_key' not in st.session_state:
         st.session_state['history_key'] = []
     if 'csv_key' not in st.session_state:
-        st.session_state['csv_key'] = './ripai_history.csv'
+        st.session_state['csv_key'] = 'ripai_history.csv'
+     if 'columns_key' not in st.session_state:
+        st.session_state['columns_key'] = ['creator', 'producer', 'pages', 'product', 'type','label','predict']
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -98,7 +100,7 @@ def main():
             label = st.session_state['label']
             y_predict = y_predict[0]
             line = [info.Creator, info.Producer, str(num_pages), product, 'PDF',label,y_predict]
-            st.write(pd.DataFrame(np.array(line).reshape((1,7)),columns = ['creator', 'producer', 'pages', 'product', 'type','label','prediction']))
+            st.write(pd.DataFrame(np.array(line).reshape((1,7)),columns = st.session_state['columns_key']))
             # st.write(f"Adding line {line} to {st.session_state['history_key']}")
             st.session_state['history_key'].append(line)
 
@@ -269,7 +271,7 @@ def main():
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
-            df = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
+            df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
             if os.path.exists(st.session_state['csv_key']):
                 df.to_csv(st.session_state['csv_key'], mode='a', header=False)
             else:
@@ -286,7 +288,7 @@ def main():
     if st.sidebar.button("Save records", key='save'):
         st.write(f"Writing prediction history, total of {len(st.session_state['history_key'])} items")
         # st.write(st.session_state['history_key'])
-        dfh = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
+        dfh = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
         st.write(f"Saving data table. During this session we collected {dfh.shape[0]} elements.")
         # historycsv = st.file_uploader("Upload History csv file", type=['csv'])
         # if historycsv:
