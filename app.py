@@ -259,7 +259,7 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            predict_succesfuly = inferenceOneJob(X,y,info,num_pages,product,model)
+            predict_succesfuly = inferenceOneJob(X.values,y,info,num_pages,product,model)
             if predict_succesfuly:
                 st.write(":smile:" * 3)
             else:
