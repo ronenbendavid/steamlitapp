@@ -282,18 +282,11 @@ def main():
             else:
                 st.write(":cake:" * 3)
             df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
-            if os.path.exists(st.session_state['csv_key']):
-                st.write(f"Writing data to a new file: {st.session_state['csv_key']}")
-                df.to_csv(st.session_state['csv_key'], mode='a', header=False)
-            else:
-                st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
-                df.to_csv(st.session_state['csv_key'], header=False)
-            #df.to_csv(st.session_state['csv_key'], mode='a', header=False)
-            if isinstance(df, pd.DataFrame):
-                st.write(f"Appending to exsiting file: {st.session_state['csv_key']}")
-                objecttodwl = df.to_csv(index=False)
-            else:
-                objecttodwl = json.dumps(df)
+            #if isinstance(df, pd.DataFrame):
+            #    objecttodwl = df.to_csv(index=False)
+            #else:
+            #    objecttodwl = json.dumps(df)
+            objecttodwl = df.to_csv(index=False)
             try:
                 # some strings <-> bytes conversions necessary here
                 b64 = base64.b64encode(objecttodwl.encode()).decode()
