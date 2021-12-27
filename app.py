@@ -23,6 +23,8 @@ def main():
     #a = ['info.Creator', 'info.Producer', str(1), 'product', 'PDF',1]
     if 'history_key' not in st.session_state:
         st.session_state['history_key'] = []
+    if 'csv_key' not in st.session_state:
+        st.session_state['csv_key'] = './ripai_history.csv'
     st.sidebar.title("RIP AI")
     st.sidebar.markdown("Welcome to RIP AI selection!")
     
@@ -267,7 +269,10 @@ def main():
             model.fit(x_train, y_train)
             inferenceOneJob(X,y,info,num_pages,product,model)
             df = pd.DataFrame(st.session_state['history_key'],columns=['Creator', 'Producer', 'Pages', 'Segment','FileType', 'Label','Predict'])
-            historysv = df.to_csv('C:/Temp/ripai_history.csv', mode='a', header=False)
+            if os.path.exists(st.session_state['csv_key']):
+                df.to_csv(st.session_state['csv_key'], mode='a', header=False)
+            else:
+                df.to_csv(st.session_state['csv_key'], mode='a', header=False)
         if st.sidebar.button("Importance", key = 'importance'):
             model.fit(x_train, y_train)
             st.write("Importance by CatBoost Classifier")
@@ -289,10 +294,11 @@ def main():
         #     dfho = pd.read_csv("./ripai_history.csv")
 
         historycsv = dfh.to_csv().encode('utf-8')
+        csvname = st.session_state['csv_key']
         st.download_button(
             label="Download data as CSV",
             data=historycsv,
-            file_name='ripai_history.csv',
+            file_name= csvname,
             mime='text/csv',
         )
 if __name__ == '__main__':
