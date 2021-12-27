@@ -237,7 +237,9 @@ def main():
         max_depth = st.sidebar.number_input("The maximum depth of the tree", 1, 20, step = 1, key = 'max_depth')
         bootstrap = st.sidebar.radio("Bootstrap samples when building trees", ('True', 'False'), key = 'bootstrap')
         metrics = st.sidebar.multiselect("What metrics to plot?", ('Confusion Matrix', 'ROC Curve', 'Precision-Recall Curve'))
-        model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40, n_estimators= n_estimators)
+        model =  XGBClassifier(random_state=1,bootstrap=False, class_weight= 'balanced', criterion= 'gini', \
+                                max_depth= max_depth, max_features= 'auto', min_samples_leaf= 10, min_samples_split= 40,\
+                                n_estimators= n_estimators,enable_categorical = True)
         if st.sidebar.button("Classify", key = 'classify'):
             st.subheader("XGBoost Results")       
             try:
@@ -257,8 +259,40 @@ def main():
             importance(x_test, y_test)
         if st.sidebar.button("Predict", key = 'predict'):
             model.fit(x_train, y_train)
-            inferenceOneJob(X,y,info,num_pages,product,model)
+            predict_succesfuly = inferenceOneJob(X,y,info,num_pages,product,model)
+            if predict_succesfuly:
+                st.write(":smile:" * 3)
+            else:
+                st.write(":cake:" * 3)
+            df = pd.DataFrame(st.session_state['history_key'],columns=st.session_state['columns_key'])
+            #if isinstance(df, pd.DataFrame):
+            #    objecttodwl = df.to_csv(index=False)
+            #else:
+            #    objecttodwl = json.dumps(df)
+            objecttodwl = df.to_csv(index=False)
+            try:
+                # some strings <-> bytes conversions necessary here
+                b64 = base64.b64encode(objecttodwl.encode()).decode()
 
+            except AttributeError as e:
+                b64 = base64.b64encode(objecttodwl).decode()
+            dl_link = f"""
+                        <html>
+                        <head>
+                        <title>Start Auto Download file</title>
+                        <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+                        <script>
+                        $('<a href="data:text/csv;base64,{b64}" download="{st.session_state['csv_key']}">')[0].click()
+                        </script>
+                        </head>
+                        </html>
+                        """
+            st.download_button(
+                label="Download data as CSV",
+                data=b64,
+                file_name= st.session_state['csv_key'],
+                mime='text/csv',
+            )
     if classifier == "CatBoost":
         st.sidebar.subheader("Model Hyperparameters")
         # learning_rate = st.sidebar.number_input("learning_rate", 100, 5000, step = 10, key = 'n_estimators')
